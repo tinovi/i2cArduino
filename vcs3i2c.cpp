@@ -102,11 +102,11 @@ float getVWC()
   return getVal(REG_READ_VWC);
 }
 
-void getData(float *readings){
+void getData(float readings[]){
   Wire.beginTransmission(addr); // transmit to device
   Wire.write(REG_GET_DATA);              // sends one byte
   Wire.endTransmission();    // stop transmitting
-
+ Wire.requestFrom(addr, 8, false);
   int ar = 0;
   while(Wire.available()>1){
     int16_t ret;
