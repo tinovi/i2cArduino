@@ -62,6 +62,17 @@ int calibrationWater(){
   return setReg(REG_CALIBRATE_WATER);
 }
 
+int calibrationEC(int16_t valueUs)
+{
+  Wire.beginTransmission(addr); 
+  Wire.write(REG_CALIBRATE_EC);
+  uint8_t *pointer = (uint8_t *)&valueUs;
+  Wire.write((uint8_t *)&pointer[0],1);
+  Wire.write((uint8_t *)&pointer[1],1);
+  Wire.endTransmission(); 
+  return getState();
+  
+}
 int newAddress(byte newAddr){
   return setReg8(REG_SET_I2C_ADDR, newAddr);
 }

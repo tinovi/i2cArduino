@@ -19,6 +19,7 @@
 
 #define  REG_CALIBRATE_AIR    0x06
 #define  REG_CALIBRATE_WATER  0x07
+#define  REG_CALIBRATE_EC  0x10
 
 #define REG_SET_I2C_ADDR    0x08
 
@@ -27,7 +28,8 @@ int init(byte address);
 int newAddress(byte newAddr);
 int calibrationAir();
 int calibrationWater();
-int newReading();
+int calibrationEC(int valueUs);
+int16_t newReading();
 float getE25();
 float getEC();
 float getTemp();

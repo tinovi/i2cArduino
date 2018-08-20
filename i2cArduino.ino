@@ -13,4 +13,4 @@ void loop() {
   float temp = getTemp();
   float vwc = getVWC();
   delay(1000);
-}
+} 
