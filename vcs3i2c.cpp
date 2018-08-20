@@ -5,9 +5,10 @@
 #include "vcs3i2c.h"
 #include "Wire.h"
 
-byte addr=0x63;
-int init(byte address){
+int addr=0x63;
+int initLib(int address){
   addr = address;
+  Wire.begin();
 }
 
 
@@ -27,7 +28,7 @@ int16_t getVal(byte reg){
   Wire.endTransmission();    // stop transmitting
  
   Wire.requestFrom(addr, 2, false);
-  int16_t ret;
+  int16_t ret=0;
   if(Wire.available()>1){
     byte *pointer = (byte *)&ret;
     pointer[0] = Wire.read();
@@ -46,7 +47,7 @@ byte setReg8(byte reg, byte val){
 }
 
 byte setReg(byte reg){
-  Wire.beginTransmission(ADDR); // transmit to device
+  Wire.beginTransmission(addr); // transmit to device
   Wire.write(reg);              // sends one byte
   Wire.endTransmission();    // stop transmitting
   return getState();
@@ -98,7 +99,7 @@ float getTemp()
 
 float getVWC()
 {
-  return getVal(REG_READ_VWC)/100;
+  return getVal(REG_READ_VWC);
 }
 
 void getData(float *readings){

@@ -2,7 +2,8 @@
 
 
 void setup() {
-  init(ADDR);
+   Serial.begin(115200);
+  initLib(0x63);
 }
 
 void loop() {
@@ -12,5 +13,17 @@ void loop() {
   float ec = getEC();
   float temp = getTemp();
   float vwc = getVWC();
+    Serial.print("e25");
+    Serial.print("=");
+    Serial.println(e25);
+    Serial.print("ec");
+    Serial.print("=");
+    Serial.println(ec);
+    Serial.print("temp");
+    Serial.print("=");
+    Serial.println(temp);
+    Serial.print("vwc");
+    Serial.print("=");
+    Serial.println(vwc);
   delay(1000);
 } 

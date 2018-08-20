@@ -24,7 +24,7 @@
 #define REG_SET_I2C_ADDR    0x08
 
 
-int init(byte address);
+int initLib(int address);
 int newAddress(byte newAddr);
 int calibrationAir();
 int calibrationWater();
