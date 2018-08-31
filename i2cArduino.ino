@@ -1,18 +1,19 @@
 #include "vcs3i2c.h"
 
+SVCS3 vcs;
 
 void setup() {
    Serial.begin(115200);
-  initLib(0x63);
+  vcs.init(0x63);
 }
 
 void loop() {
-  newReading(); // start sensor reading
+  vcs.newReading(); // start sensor reading
   delay(100); //let sensor read data
-  float e25 = getE25();
-  float ec = getEC();
-  float temp = getTemp();
-  float vwc = getVWC();
+  float e25 = vcs.getE25();
+  float ec = vcs.getEC();
+  float temp = vcs.getTemp();
+  float vwc = vcs.getVWC();
 //    Serial.print("e25");
 //    Serial.print("=");
 //    Serial.println(e25);
@@ -26,7 +27,7 @@ void loop() {
 //    Serial.print("=");
 //    Serial.println(vwc);
   float dat[4]={0,0,0,0};
-  getData(dat);
+  vcs.getData(dat);
   Serial.println("-----");
     Serial.print("e25");
     Serial.print("=");

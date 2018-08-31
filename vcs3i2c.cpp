@@ -3,16 +3,19 @@
  *
  */
 #include "vcs3i2c.h"
-#include "Wire.h"
 
-int addr=0x63;
-int initLib(int address){
+
+SVCS3::SVCS3(){
+  addr=0x63;
+}
+
+int SVCS3::init(int address){
   addr = address;
   Wire.begin();
 }
 
 
-byte getState(){ //-1:no data, 0:err, 1:ok
+int SVCS3::getState(){ //-1:no data, 0:err, 1:ok
   Wire.requestFrom(addr, 1, false);
   if(Wire.available()>0){
     return Wire.read();
@@ -21,7 +24,7 @@ byte getState(){ //-1:no data, 0:err, 1:ok
   }
 }
 
-int16_t getVal(byte reg){
+int16_t SVCS3::getVal(byte reg){
 
   Wire.beginTransmission(addr); // transmit to device
   Wire.write(reg);              // sends one byte
@@ -38,7 +41,7 @@ int16_t getVal(byte reg){
 }
 
 
-byte setReg8(byte reg, byte val){
+int SVCS3::setReg8(byte reg, byte val){
   Wire.beginTransmission(addr); // transmit to device
   Wire.write(reg);              // sends one byte
   Wire.write(val);              // sends one byte
@@ -46,7 +49,7 @@ byte setReg8(byte reg, byte val){
   return getState();
 }
 
-byte setReg(byte reg){
+int SVCS3::setReg(byte reg){
   Wire.beginTransmission(addr); // transmit to device
   Wire.write(reg);              // sends one byte
   Wire.endTransmission();    // stop transmitting
@@ -55,15 +58,15 @@ byte setReg(byte reg){
 
 
 
-int calibrationAir(){
+int SVCS3::calibrationAir(){
   return setReg(REG_CALIBRATE_AIR);
 }
 
-int calibrationWater(){
+int SVCS3::calibrationWater(){
   return setReg(REG_CALIBRATE_WATER);
 }
 
-int calibrationEC(int16_t valueUs)
+int SVCS3::calibrationEC(int16_t valueUs)
 {
   Wire.beginTransmission(addr); 
   Wire.write(REG_CALIBRATE_EC);
@@ -74,35 +77,41 @@ int calibrationEC(int16_t valueUs)
   return getState();
   
 }
-int newAddress(byte newAddr){
-  return setReg8(REG_SET_I2C_ADDR, newAddr);
+int SVCS3::newAddress(byte newAddr){
+  if(setReg8(REG_SET_I2C_ADDR, newAddr)){
+    addr = newAddr;
+  }
+  else{
+    return 0;
+  }
+  return 1;
 }
 
-int newReading(){
+int SVCS3::newReading(){
   return setReg(REG_READ_START);
 }
 
-float getE25()
+float SVCS3::getE25()
 {
   return getVal(REG_READ_E25)/100;
 }
 
-float getEC()
+float SVCS3::getEC()
 {
   return getVal(REG_READ_EC)/100;
 }
 
-float getTemp()
+float SVCS3::getTemp()
 {
   return getVal(REG_READ_TEMP)/100;
 }
 
-float getVWC()
+float SVCS3::getVWC()
 {
   return getVal(REG_READ_VWC);
 }
 
-void getData(float readings[]){
+void SVCS3::getData(float readings[]){
   Wire.beginTransmission(addr); // transmit to device
   Wire.write(REG_GET_DATA);              // sends one byte
   Wire.endTransmission();    // stop transmitting
@@ -121,4 +130,5 @@ void getData(float readings[]){
     ar++;
   }
 }
+
 
