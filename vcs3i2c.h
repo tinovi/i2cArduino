@@ -2,11 +2,12 @@
  * vcs3i2c.h
  *
  */
-#include <Arduino.h>
-#include <Wire.h>
 
 #ifndef VCS3I2C_H_
 #define VCS3I2C_H_
+
+#include <Arduino.h>
+#include <Wire.h>
 
 #define ADDR 0x63
 
