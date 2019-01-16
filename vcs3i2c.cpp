@@ -98,7 +98,7 @@ float SVCS3::getE25()
 
 float SVCS3::getEC()
 {
-  return getVal(REG_READ_EC)/100.0;
+  return getVal(REG_READ_EC)/10.0;
 }
 
 float SVCS3::getTemp()
@@ -122,12 +122,21 @@ void SVCS3::getData(float readings[]){
     byte *pointer = (byte *)&ret;
     pointer[0] = Wire.read();
     pointer[1] = Wire.read();
-    if(ar<3){
-      readings[ar]=ret/100.0;
-    }else{
-      readings[ar]=ret;
-     }
-    ar++;
+	switch (ar) {
+	case 0:
+		readings[ar] = ret / 100.0;
+		break;
+	case 1:
+		readings[ar] = ret / 10.0;
+		break;
+	case 2:
+		readings[ar] = ret / 100.0;
+		break;
+	case 3:
+		readings[ar] = ret;
+		break;
+	}
+	ar++;
   }
 }
 
