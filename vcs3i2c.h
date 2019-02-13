@@ -29,16 +29,23 @@ class SVCS3
 {
 public:
   SVCS3();
+  //pass i2c addres of sensor, default 0x63
   int init(int address);
+  // update i2c address of sesnor
   int newAddress(byte newAddr);
+  // hold sesnor in air or put in dry soil and call  (offset DP = 1 or VWC=0%)
   int calibrationAir();
+  // submerge sesnor in the water or soil with water (offset DP = 80 or VWC=100%)
   int calibrationWater();
+  // submerge sesnor in EC calibration fluid or soil with known EC and supply correc EC vaue in 
   int calibrationEC(int16_t valueUs);
+  //initate reading, then need to wait for 100ms to let reading to finish
   int newReading();
   float getE25();
   float getEC();
   float getTemp();
   float getVWC();
+  //get all values, supply float[4] , return 0-DP;1-EC;2-Temp;3-VWC
   void getData(float retVal[]);
 private:
   int addr;
