@@ -60,7 +60,7 @@ pin #GND - shield (GND)
 **SDA and SCL lines requires pull-up resitors to 3.3v line, we recommend to use 1.8K resistors, because of long wiring to i2c sensor.**
 
 ### API
-'''
+```
 SVCS3();
   //pass i2c addres of sensor, default 0x63
   int init(int address);
@@ -80,7 +80,7 @@ SVCS3();
   float getVWC();
   //get all values, supply float[4] , return 0-DP;1-EC;2-Temp;3-VWC
   void getData(float retVal[]);
-'''
+```
 
 
 ### Get software
