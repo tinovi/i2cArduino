@@ -108,7 +108,7 @@ float SVCS3::getTemp()
 
 float SVCS3::getVWC()
 {
-  return getVal(REG_READ_VWC);
+  return getVal(REG_READ_VWC)/10.0;
 }
 
 void SVCS3::getData(float readings[]){
@@ -133,7 +133,7 @@ void SVCS3::getData(float readings[]){
 		readings[ar] = ret / 100.0;
 		break;
 	case 3:
-		readings[ar] = ret;
+		readings[ar] = ret / 10.0;
 		break;
 	}
 	ar++;
