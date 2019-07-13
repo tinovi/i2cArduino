@@ -16,7 +16,7 @@ int SVCS3::init(int address){
 
 
 int SVCS3::getState(){ //-1:no data, 0:err, 1:ok
-  Wire.requestFrom(addr, 1, false);
+  Wire.requestFrom(addr, 1);
   if(Wire.available()>0){
     return Wire.read();
   }else{
@@ -30,7 +30,7 @@ int16_t SVCS3::getVal(byte reg){
   Wire.write(reg);              // sends one byte
   Wire.endTransmission();    // stop transmitting
  
-  Wire.requestFrom(addr, 2, false);
+  Wire.requestFrom(addr, 2);
   int16_t ret=0;
   if(Wire.available()>1){
     byte *pointer = (byte *)&ret;
@@ -88,7 +88,11 @@ int SVCS3::newAddress(byte newAddr){
 }
 
 int SVCS3::newReading(){
-  return setReg(REG_READ_START);
+  Wire.beginTransmission(addr); // transmit to device
+  Wire.write(REG_READ_START);              // sends one byte
+  Wire.endTransmission();    // stop transmitting
+  delay(300);
+  return getState();
 }
 
 float SVCS3::getE25()
@@ -115,7 +119,7 @@ void SVCS3::getData(float readings[]){
   Wire.beginTransmission(addr); // transmit to device
   Wire.write(REG_GET_DATA);              // sends one byte
   Wire.endTransmission();    // stop transmitting
- Wire.requestFrom(addr, 8, false);
+ Wire.requestFrom(addr, 8);
   int ar = 0;
   while(Wire.available()>1){
     int16_t ret;
