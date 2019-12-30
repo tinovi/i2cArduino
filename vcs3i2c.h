@@ -19,9 +19,17 @@
 #define  REG_READ_TEMP    0x04
 #define  REG_READ_VWC     0x05
 
+
+#define  REG_CAP     0x0A
+#define  REG_RES     0x0B
+#define  REG_RC     0x0C
+#define  REG_RT     0x0D
+
 #define  REG_CALIBRATE_AIR    0x06
 #define  REG_CALIBRATE_WATER  0x07
 #define  REG_CALIBRATE_EC  0x10
+
+#define  REG_RES     0x0B
 
 #define REG_SET_I2C_ADDR    0x08
 
@@ -29,31 +37,33 @@ class SVCS3
 {
 public:
   SVCS3();
-  //pass i2c addres of sensor, default 0x63
+  int init(int address, TwoWire *the_wire);
   int init(int address);
-  // update i2c address of sesnor
   int newAddress(byte newAddr);
-  // hold sesnor in air or put in dry soil and call  (offset DP = 1 or VWC=0%)
+  int resetDefault();
   int calibrationAir();
-  // submerge sesnor in the water or soil with water (offset DP = 80 or VWC=100%)
   int calibrationWater();
-  // submerge sesnor in EC calibration fluid or soil with known EC and supply correc EC vaue in 
   int calibrationEC(int16_t valueUs);
-  //initate reading, then need to wait for 100ms to let reading to finish
   int newReading();
   float getE25();
   float getEC();
   float getTemp();
   float getVWC();
-  //get all values, supply float[4] , return 0-DP;1-EC;2-Temp;3-VWC
   void getData(float retVal[]);
+  void getRaw(byte data[]);
+  int16_t getCap();
+  int16_t getRc();
+  uint32_t getRt();
+
 private:
-  int addr;
+  TwoWire *_wire;
+  uint16_t addr;
   int getState();
   int16_t getVal(byte reg);
+  uint32_t getVal32(byte reg);
   int setReg8(byte reg, byte val);
   int setReg(byte reg);
-
+  bool i2cdelay(int size);
 
 };
 
