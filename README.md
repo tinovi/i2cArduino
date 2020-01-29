@@ -1,3 +1,44 @@
+# Tinovi PM-WCS-3-I2C soil moisture / EC and Temperature i2c sensor Arduino library
+
+## Interfacing from Arduino
+**WARNING!!! use 3.3 voltage levels only, more voltage will damage device**
+
+###wiring to Arduiono:
+
+Arduiono pin #3V3 - sensor red (3.3v)
+
+Arduiono pin #A4 - sensor green (SDA)
+
+Arduiono pin #A5 - sensor white (SCL)
+
+Arduiono pin #GND - sensor black (GND)
+
+pin #GND - shield (GND)
+
+**SDA and SCL lines requires pull-up resitors to 3.3v line, we recommend to use 1.8K resistors, because of long wiring to i2c sensor.**
+
+### API
+```
+SVCS3();
+  //pass i2c addres of sensor, default 0x63
+  int init(int address);
+  // update i2c address of sesnor
+  int newAddress(byte newAddr);
+  // hold sesnor in air or put in dry soil and call  (offset DP = 1 or VWC=0%)
+  int calibrationAir();
+  // submerge sesnor in the water or soil with water (offset DP = 80 or VWC=100%)
+  int calibrationWater();
+  // submerge sesnor in EC calibration fluid or soil with known EC and supply correc EC vaue in 
+  int calibrationEC(int16_t valueUs);
+  //initate reading, then need to wait for 100ms to let reading to finish
+  int newReading();
+  float getE25();
+  float getEC();
+  float getTemp();
+  float getVWC();
+  //get all values, supply float[4] , return 0-DP;1-EC;2-Temp;3-VWC
+  void getData(float retVal[]);
+```
 
 
 
@@ -42,45 +83,6 @@ To get software execute following on Raspberry Pi:
 `./svcs 0x63 addr 0x65` to change default address 0x63 to new I2C address: 0x65
 
 
-## Interfacing from Arduino
-**WARNING!!! use 3.3 voltage levels only, more voltage will damage device**
-
-###wiring to Arduiono:
-
-Arduiono pin #3V3 - sensor red (3.3v)
-
-Arduiono pin #A4 - sensor green (SDA)
-
-Arduiono pin #A5 - sensor white (SCL)
-
-Arduiono pin #GND - sensor black (GND)
-
-pin #GND - shield (GND)
-
-**SDA and SCL lines requires pull-up resitors to 3.3v line, we recommend to use 1.8K resistors, because of long wiring to i2c sensor.**
-
-### API
-```
-SVCS3();
-  //pass i2c addres of sensor, default 0x63
-  int init(int address);
-  // update i2c address of sesnor
-  int newAddress(byte newAddr);
-  // hold sesnor in air or put in dry soil and call  (offset DP = 1 or VWC=0%)
-  int calibrationAir();
-  // submerge sesnor in the water or soil with water (offset DP = 80 or VWC=100%)
-  int calibrationWater();
-  // submerge sesnor in EC calibration fluid or soil with known EC and supply correc EC vaue in 
-  int calibrationEC(int16_t valueUs);
-  //initate reading, then need to wait for 100ms to let reading to finish
-  int newReading();
-  float getE25();
-  float getEC();
-  float getTemp();
-  float getVWC();
-  //get all values, supply float[4] , return 0-DP;1-EC;2-Temp;3-VWC
-  void getData(float retVal[]);
-```
 
 
 ### Get software
@@ -91,5 +93,7 @@ Sensor default I2C address is 0x63.
 
 Download Arduino library from [there.](https://github.com/tinovi/i2cArduino)
 Download Arduino esp32 library from [there.](https://github.com/tinovi/i2cArduino/tree/esp32)
-<a href="https://tinovi.com/wp-content/uploads/2019/03/PM-WCS-3-I2C.pdf"> Docs </a>
+<a href="https://tinovi.com/wp-content/uploads/2020/01/PM-WCS-3-I2C.pdf"> Docs </a>
 <a href="https://tinovi.com/tinovi-shop/"> Shop </a>
+
+[PM-WCS-3-I2C]: i2c-alvas-EC-729x1024.png "PM-WCS-3-I2C"

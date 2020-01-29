@@ -1,4 +1,4 @@
-#include "vcs3i2c.h"
+#include "i2cArduino.h"
 
 SVCS3 vcs;
 
@@ -10,6 +10,8 @@ void setup() {
 void loop() {
   vcs.newReading(); // start sensor reading
   delay(100); //let sensor read data
+
+//getting values one by one
   float e25 = vcs.getE25();
   float ec = vcs.getEC();
   float temp = vcs.getTemp();
@@ -26,6 +28,8 @@ void loop() {
 //    Serial.print("vwc");
 //    Serial.print("=");
 //    Serial.println(vwc);
+
+//getting values all at one request
   float dat[4]={0,0,0,0};
   vcs.getData(dat);
   Serial.println("-----");

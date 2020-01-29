@@ -1,8 +1,8 @@
 /*
- * vcs3i2c.cpp
+ * i2cArduino.cpp
  *
  */
-#include "vcs3i2c.h"
+#include "i2cArduino.h"
 
 
 SVCS3::SVCS3(){
