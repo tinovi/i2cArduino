@@ -92,8 +92,11 @@ This sample software demonstrates hot to read data from sensor.
 Sensor default I2C address is 0x63.
 
 Download Arduino library from [there.](https://github.com/tinovi/i2cArduino)
+
 Download Arduino esp32 library from [there.](https://github.com/tinovi/i2cArduino/tree/esp32)
-<a href="https://tinovi.com/wp-content/uploads/2020/01/PM-WCS-3-I2C.pdf"> Docs </a>
+
+<a href="https://tinovi.com/wp-content/uploads/2020/01/PM-WCS-3-I2C.pdf"> PM-WCS-3-I2C.pdf </a>
+
 <a href="https://tinovi.com/tinovi-shop/"> Shop </a>
 
-[PM-WCS-3-I2C]: i2c-alvas-EC-729x1024.png "PM-WCS-3-I2C"
+[PM-WCS-3-I2C] https://github.com/tinovi/i2cArduino/blob/master/i2c-alvas-EC-729x1024.png "PM-WCS-3-I2C"
