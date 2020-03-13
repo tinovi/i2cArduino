@@ -46,7 +46,7 @@ int SVCS3::getState(){ //-1:no data, 0:err, 1:ok
 
 int16_t SVCS3::getVal(byte reg){
 
-  _wire->beginTransmission(addr); // transmit to device
+  _wire->beginTransmission((byte)addr); // transmit to device
   _wire->write(reg);              // sends one byte
   _wire->endTransmission();    // stop transmitting
  
@@ -62,7 +62,7 @@ int16_t SVCS3::getVal(byte reg){
 
 uint32_t SVCS3::getVal32(byte reg){
 
-  _wire->beginTransmission(addr); // transmit to device
+  _wire->beginTransmission((byte)addr); // transmit to device
   _wire->write(reg);              // sends one byte
   _wire->endTransmission();    // stop transmitting
 
@@ -80,7 +80,7 @@ uint32_t SVCS3::getVal32(byte reg){
 
 
 int SVCS3::setReg8(byte reg, byte val){
-  _wire->beginTransmission(addr); // transmit to device
+  _wire->beginTransmission((byte)addr); // transmit to device
   _wire->write(reg);              // sends one byte
   _wire->write(val);              // sends one byte
   _wire->endTransmission();    // stop transmitting
@@ -88,7 +88,7 @@ int SVCS3::setReg8(byte reg, byte val){
 }
 
 int SVCS3::setReg(byte reg){
-  _wire->beginTransmission(addr); // transmit to device
+  _wire->beginTransmission((byte)addr); // transmit to device
   _wire->write(reg);              // sends one byte
   _wire->endTransmission();    // stop transmitting
   delay(2);
@@ -111,7 +111,7 @@ int SVCS3::calibrationWater(){
 
 int SVCS3::calibrationEC(int16_t valueUs)
 {
-  _wire->beginTransmission(addr);
+  _wire->beginTransmission((byte)addr);
   _wire->write(REG_CALIBRATE_EC);
   uint8_t *pointer = (uint8_t *)&valueUs;
   _wire->write((uint8_t *)&pointer[0],1);
@@ -131,7 +131,7 @@ int SVCS3::newAddress(byte newAddr){
 }
 
 int SVCS3::newReading(){
-  _wire->beginTransmission(addr); // transmit to device
+  _wire->beginTransmission((byte)addr); // transmit to device
   _wire->write(REG_READ_START);              // sends one byte
   _wire->endTransmission();    // stop transmitting
   delay(300);
@@ -173,7 +173,7 @@ uint32_t  SVCS3::getRt(){
 }
 
 void SVCS3::getData(float readings[]){
-  _wire->beginTransmission(addr); // transmit to device
+  _wire->beginTransmission((byte)addr); // transmit to device
   _wire->write(REG_GET_DATA);              // sends one byte
   _wire->endTransmission();    // stop transmitting
   _wire->requestFrom(addr, (uint8_t)8);
@@ -206,7 +206,7 @@ void SVCS3::getData(float readings[]){
 }
 
 void SVCS3::getRaw(byte data[]){
-  _wire->beginTransmission(addr); // transmit to device
+  _wire->beginTransmission((byte)addr); // transmit to device
   _wire->write(REG_GET_DATA);              // sends one byte
   _wire->endTransmission();    // stop transmitting
   _wire->requestFrom(addr, (uint8_t)8);
