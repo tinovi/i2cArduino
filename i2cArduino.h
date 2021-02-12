@@ -57,7 +57,7 @@ public:
 
 private:
   TwoWire *_wire;
-  uint16_t addr;
+  uint8_t addr;
   int getState();
   int16_t getVal(byte reg);
   uint32_t getVal32(byte reg);

@@ -1,11 +1,12 @@
 # Tinovi PM-WCS-3-I2C soil moisture / EC and Temperature i2c sensor Arduino library
 
 ## Interfacing from Arduino
-**WARNING!!! use 3.3 voltage levels only, more voltage will damage device**
+**WARNING!!! use 3.3 voltage levels only, more voltage will damage device, latest models support 2.2v-5v voltage levels**
+
 
 ###wiring to Arduiono:
 
-Arduiono pin #3V3 - sensor red (3.3v)
+Arduiono pin #3V3 - sensor red (3.3v) (2.2v-5 for latest version)
 
 Arduiono pin #A4 - sensor green (SDA)
 
