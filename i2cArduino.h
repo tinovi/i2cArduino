@@ -3,44 +3,56 @@
  *
  */
 
-#ifndef VCLL_H_
-#define VCLL_H_
+#ifndef VCS3I2C_H_
+#define VCS3I2C_H_
 
 #include <Arduino.h>
 #include <Wire.h>
 
-#define ADDR 0x61
+#define ADDR 0x63
 
-#define  REG_READ    0x01
-#define  REG_TEMP    0x04
-#define  REG_WET     0x05
+#define  REG_READ_START    0x01
+#define  REG_GET_DATA      0x09
 
-#define  REG_AIR    0x06
-#define  REG_WATER  0x07
+#define  REG_READ_E25     0x02
+#define  REG_READ_EC      0x03
+#define  REG_READ_TEMP    0x04
+#define  REG_READ_VWC     0x05
+
 
 #define  REG_CAP     0x0A
 #define  REG_RES     0x0B
+#define  REG_RC     0x0C
 #define  REG_RT     0x0D
 
-#define REG_ADDR 0x08
-#define  REG_DATA     0x09
+#define  REG_CALIBRATE_AIR    0x06
+#define  REG_CALIBRATE_WATER  0x07
+#define  REG_CALIBRATE_EC  0x10
 
-class LeafSens
+#define  REG_RES     0x0B
+
+#define REG_SET_I2C_ADDR    0x08
+
+class SVCS3
 {
 public:
-  LeafSens();
+  SVCS3();
   int init(int address, TwoWire *the_wire);
   int init(int address);
   int newAddress(byte newAddr);
   int resetDefault();
   int calibrationAir();
   int calibrationWater();
+  int calibrationEC(int16_t valueUs);
   int newReading();
-  float getWet();
+  float getE25();
+  float getEC();
   float getTemp();
+  float getVWC();
   void getData(float retVal[]);
   void getRaw(byte data[]);
   int16_t getCap();
+  int16_t getRc();
   uint32_t getRt();
 
 private:
@@ -55,5 +67,5 @@ private:
 
 };
 
-#endif /* VCLL_H_ */
+#endif /* VCS3I2C_H_ */
 

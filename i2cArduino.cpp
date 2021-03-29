@@ -2,20 +2,20 @@
  * i2cArduino.cpp
  *
  */
-#include "LeafSens.h"
+#include "i2cArduino.h"
 
 
-LeafSens::LeafSens(){
-  addr=ADDR;
+SVCS3::SVCS3(){
+  addr=0x63;
 }
 
-int LeafSens::init(int address, TwoWire *the_wire){
+int SVCS3::init(int address, TwoWire *the_wire){
   _wire = the_wire;
   addr = address;
   return 0;
 }
 
-int LeafSens::init(int address){
+int SVCS3::init(int address){
   _wire = &Wire;
   _wire->begin();
   addr = address;
@@ -23,7 +23,7 @@ int LeafSens::init(int address){
 }
 
 
-bool LeafSens::i2cdelay(int size){
+bool SVCS3::i2cdelay(int size){
   int i=0;
   for (;_wire->available() < size && i<=size;i++) {
 	  delay(2);
@@ -35,7 +35,7 @@ bool LeafSens::i2cdelay(int size){
   }
 }
 
-int LeafSens::getState(){ //-1:no data, 0:err, 1:ok
+int SVCS3::getState(){ //-1:no data, 0:err, 1:ok
   _wire->requestFrom(addr, (uint8_t)1);
    if(i2cdelay(1)){
     return _wire->read();
@@ -44,7 +44,7 @@ int LeafSens::getState(){ //-1:no data, 0:err, 1:ok
   }
 }
 
-int16_t LeafSens::getVal(byte reg){
+int16_t SVCS3::getVal(byte reg){
 
   _wire->beginTransmission(addr); // transmit to device
   _wire->write(reg);              // sends one byte
@@ -60,7 +60,7 @@ int16_t LeafSens::getVal(byte reg){
   return ret;
 }
 
-uint32_t LeafSens::getVal32(byte reg){
+uint32_t SVCS3::getVal32(byte reg){
 
   _wire->beginTransmission(addr); // transmit to device
   _wire->write(reg);              // sends one byte
@@ -79,7 +79,7 @@ uint32_t LeafSens::getVal32(byte reg){
 }
 
 
-int LeafSens::setReg8(byte reg, byte val){
+int SVCS3::setReg8(byte reg, byte val){
   _wire->beginTransmission(addr); // transmit to device
   _wire->write(reg);              // sends one byte
   _wire->write(val);              // sends one byte
@@ -87,7 +87,7 @@ int LeafSens::setReg8(byte reg, byte val){
   return getState();
 }
 
-int LeafSens::setReg(byte reg){
+int SVCS3::setReg(byte reg){
   _wire->beginTransmission(addr); // transmit to device
   _wire->write(reg);              // sends one byte
   _wire->endTransmission();    // stop transmitting
@@ -96,20 +96,32 @@ int LeafSens::setReg(byte reg){
 }
 
 
-int LeafSens::resetDefault(){
+int SVCS3::resetDefault(){
   return setReg(REG_RES);
 }
 
 
-int LeafSens::calibrationAir(){
-  return setReg(REG_AIR);
+int SVCS3::calibrationAir(){
+  return setReg(REG_CALIBRATE_AIR);
 }
 
-int LeafSens::calibrationWater(){
-  return setReg(REG_WATER);
+int SVCS3::calibrationWater(){
+  return setReg(REG_CALIBRATE_WATER);
 }
-int LeafSens::newAddress(byte newAddr){
-  if(setReg8(REG_ADDR, newAddr)){
+
+int SVCS3::calibrationEC(int16_t valueUs)
+{
+  _wire->beginTransmission(addr);
+  _wire->write(REG_CALIBRATE_EC);
+  uint8_t *pointer = (uint8_t *)&valueUs;
+  _wire->write((uint8_t *)&pointer[0],1);
+  _wire->write((uint8_t *)&pointer[1],1);
+  _wire->endTransmission();
+  return getState();
+  
+}
+int SVCS3::newAddress(byte newAddr){
+  if(setReg8(REG_SET_I2C_ADDR, newAddr)){
     addr = newAddr;
   }
   else{
@@ -118,64 +130,84 @@ int LeafSens::newAddress(byte newAddr){
   return 1;
 }
 
-int LeafSens::newReading(){
+int SVCS3::newReading(){
   _wire->beginTransmission(addr); // transmit to device
-  _wire->write(REG_READ);              // sends one byte
+  _wire->write(REG_READ_START);              // sends one byte
   _wire->endTransmission();    // stop transmitting
   delay(300);
   return getState();
 }
 
-float LeafSens::getWet()
+float SVCS3::getE25()
 {
-  return getVal(REG_WET)/100.0;
+  return getVal(REG_READ_E25)/100.0;
 }
 
-float LeafSens::getTemp()
+float SVCS3::getEC()
 {
-  return getVal(REG_TEMP)/100.0;
+  return getVal(REG_READ_EC)/10.0;
 }
 
-int16_t LeafSens::getCap()
+float SVCS3::getTemp()
+{
+  return getVal(REG_READ_TEMP)/100.0;
+}
+
+float SVCS3::getVWC()
+{
+  return getVal(REG_READ_VWC);
+}
+
+int16_t SVCS3::getCap()
 {
   return getVal(REG_CAP);
 }
 
+int16_t SVCS3::getRc()
+{
+  return getVal(REG_RC);
+}
 
-uint32_t  LeafSens::getRt(){
+uint32_t  SVCS3::getRt(){
 	return getVal32(REG_RT);
 }
 
-void LeafSens::getData(float readings[]){
+void SVCS3::getData(float readings[]){
   _wire->beginTransmission(addr); // transmit to device
-  _wire->write(REG_READ);              // sends one byte
+  _wire->write(REG_GET_DATA);              // sends one byte
   _wire->endTransmission();    // stop transmitting
   _wire->requestFrom(addr, (uint8_t)8);
   if(i2cdelay(8)){
-	  for (int k = 0; k < 2; k++){
-		  int16_t ret;
-		  byte *pointer = (byte *)&ret;
-		  pointer[0] = _wire->read();
-		  pointer[1] = _wire->read();
-		  switch (k) {
-        case 0:
-          readings[k] = ret / 100.0;
-          break;
-        case 1:
-          readings[k] = ret / 100.0;
-          break;
-      }
+	  for (int k = 0; k < 4; k++){
+		int16_t ret;
+		byte *pointer = (byte *)&ret;
+		pointer[0] = _wire->read();
+		pointer[1] = _wire->read();
+		switch (k) {
+		case 0:
+			readings[k] = ret / 100.0;
+			break;
+		case 1:
+			readings[k] = ret / 10.0;
+			break;
+		case 2:
+			readings[k] = ret / 100.0;
+			break;
+		case 3:
+			readings[k] = ret / 10.0;
+			break;
+		}
 	  }
   }else{
-	  for (int k = 0; k < 2; k++){
+	  for (int k = 0; k < 4; k++){
 		readings[k] = 0.0;
 	  }
   }
 }
 
-void LeafSens::getRaw(byte data[]){
+void SVCS3::getRaw(byte data[]){
   _wire->beginTransmission(addr); // transmit to device
-  _wire->write(REG_DATA);              // sends one byte
+  _wire->write(REG_GET_DATA);              // sends one byte
   _wire->endTransmission();    // stop transmitting
   _wire->requestFrom(addr, (uint8_t)8);
   if(i2cdelay(8)){
