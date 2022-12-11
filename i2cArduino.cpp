@@ -155,7 +155,7 @@ float SVCS3::getTemp()
 
 float SVCS3::getVWC()
 {
-  return getVal(REG_READ_VWC);
+  return getVal(REG_READ_VWC)/10.0;
 }
 
 int16_t SVCS3::getCap()
